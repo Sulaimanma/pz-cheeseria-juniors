@@ -12,6 +12,7 @@ import Badge from '@material-ui/core/Badge';
 // Styles
 import { Wrapper, StyledButton, StyledAppBar, HeaderTypography } from './App.styles';
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
+import CheeseDetailDialog from './Cart/CheeseDetailDialog/CheeseDetailDialog';
 // Types
 export type CartItemType = {
   id: number;
@@ -29,6 +30,8 @@ const getCheeses = async (): Promise<CartItemType[]> =>
 
 const App = () => {
   const [cartOpen, setCartOpen] = useState(false);
+  // Control the cheese detail dialog open state
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [cartItems, setCartItems] = useState([] as CartItemType[]);
   const { data, isLoading, error } = useQuery<CartItemType[]>(
     'cheeses',
@@ -121,11 +124,15 @@ const App = () => {
 
       <Grid container spacing={3}>
         {data?.map(item => (
-          <Grid item key={item.id} xs={12} sm={4}>
+          <Grid item key={item.id} xs={12} sm={4}  onClick={() => setDialogOpen(true)}>
             <Item item={item} handleAddToCart={handleAddToCart} />
           </Grid>
         ))}
       </Grid>
+      <CheeseDetailDialog
+        open={dialogOpen}
+        setOpen={setDialogOpen}
+      />
     </Wrapper>
 
   );
