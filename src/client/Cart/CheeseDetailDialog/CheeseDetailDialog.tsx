@@ -9,10 +9,13 @@ import Slide from "@material-ui/core/Slide"
 import { TransitionProps } from "@material-ui/core/transitions"
 //Styles
 import { Wrapper } from "./CheeseDetailDialog.styles"
+//Types
+import { CartItemType } from "../../App"
 
 type Props = {
   open: boolean
   setOpen: (openStatus: boolean) => void
+  cheeseItem: CartItemType
 }
 
 const Transition = React.forwardRef(function Transition(
@@ -22,14 +25,14 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />
 })
 
-const CheeseDetailDialog: React.FC<Props> = ({ open, setOpen }) => {
+const CheeseDetailDialog: React.FC<Props> = ({ open, setOpen, cheeseItem }) => {
   const handleClose = () => {
     setOpen(false)
   }
 
   return (
     <Wrapper>
-      <div>
+
         <Dialog
           open={open}
           TransitionComponent={Transition}
@@ -39,11 +42,11 @@ const CheeseDetailDialog: React.FC<Props> = ({ open, setOpen }) => {
           aria-describedby="alert-dialog-slide-description"
         >
           <DialogTitle id="alert-dialog-slide-title">
-            {"Cheese title"}
+            {cheeseItem.title}
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
-              Cheese Description
+             {cheeseItem.description}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -52,7 +55,7 @@ const CheeseDetailDialog: React.FC<Props> = ({ open, setOpen }) => {
             </Button>
           </DialogActions>
         </Dialog>
-      </div>
+   
     </Wrapper>
   )
 }

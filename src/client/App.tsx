@@ -25,6 +25,7 @@ export type CartItemType = {
 };
 
 
+
 const getCheeses = async (): Promise<CartItemType[]> =>
   await (await fetch(`api/cheeses`)).json();
 
@@ -32,6 +33,8 @@ const App = () => {
   const [cartOpen, setCartOpen] = useState(false);
   // Control the cheese detail dialog open state
   const [dialogOpen, setDialogOpen] = useState(false);
+  //Determine the click card index
+  const [clickCardIndex, setClickCardIndex] = useState<number>(2)
   const [cartItems, setCartItems] = useState([] as CartItemType[]);
   const { data, isLoading, error } = useQuery<CartItemType[]>(
     'cheeses',
@@ -124,15 +127,20 @@ const App = () => {
 
       <Grid container spacing={3}>
         {data?.map(item => (
-          <Grid item key={item.id} xs={12} sm={4}  onClick={() => setDialogOpen(true)}>
+          <Grid item key={item.id} xs={12} sm={4}  
+          onClick={() =>{ 
+            setDialogOpen(true)
+            setClickCardIndex(item.id)
+            }}>
             <Item item={item} handleAddToCart={handleAddToCart} />
           </Grid>
         ))}
       </Grid>
-      <CheeseDetailDialog
+    {  data&&<CheeseDetailDialog
         open={dialogOpen}
         setOpen={setDialogOpen}
-      />
+        cheeseItem={data[clickCardIndex-1]}
+      />}
     </Wrapper>
 
   );
