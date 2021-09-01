@@ -15,7 +15,7 @@ const Cart: React.FC<Props> = ({ cartItems, addToCart, removeFromCart }) => {
   const queryClient = useQueryClient();
 
   //Post purchase record query
-  const { mutate, isLoading } = useMutation(createPurchase, {
+  const { mutate, isLoading, error } = useMutation(createPurchase, {
     onSuccess: (data) => {
       console.log(data);
       const message = 'success';
@@ -35,10 +35,10 @@ const Cart: React.FC<Props> = ({ cartItems, addToCart, removeFromCart }) => {
   //Handle click on purchase button
   const purchaseItems = (items: CartItemType[]) => {
     //Get the purchase time
-
     let purchaseTime = moment().format('DD-MM-YYYY hh:mm:ss');
 
-    const purchaseRecord = cartItems?.map((cheese) => {
+    //Initialize the record data props
+    const purchaseRecord: PurchaseRecordType[] = cartItems?.map((cheese) => {
       const record = {
         id: uuid(),
         title: cheese.title,
@@ -50,7 +50,7 @@ const Cart: React.FC<Props> = ({ cartItems, addToCart, removeFromCart }) => {
       };
       return record;
     });
-    console.log('record', purchaseRecord);
+    mutate(purchaseRecord);
   };
 
   return (

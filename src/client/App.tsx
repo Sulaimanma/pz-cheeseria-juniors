@@ -9,19 +9,12 @@ import Grid from '@material-ui/core/Grid';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import RestoreIcon from '@material-ui/icons/Restore';
 import Badge from '@material-ui/core/Badge';
+import axios from 'axios';
 // Styles
-import {
-  Wrapper,
-  StyledButton,
-  StyledAppBar,
-  HeaderTypography,
-} from './App.styles';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-} from '@material-ui/core';
+import { Wrapper, StyledButton, StyledAppBar, HeaderTypography } from './App.styles';
+import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import CheeseDetailDialog from './Cart/CheeseDetailDialog/CheeseDetailDialog';
+
 // Types
 export type CartItemType = {
   id: number;
@@ -33,42 +26,54 @@ export type CartItemType = {
   amount: number;
 };
 
-const getCheeses = async (): Promise<CartItemType[]> =>
-  await (await fetch(`api/cheeses`)).json();
+export type PurchaseRecordType = {
+  title: string;
+  price: number;
+  description: string;
+  image: string;
+  id: string;
+  amount: number;
+  purchaseTime: string;
+};
+// Get cheese list
+const getCheeses = async (): Promise<CartItemType[]> => await (await fetch(`api/cheeses`)).json();
+// create purchase record
+
+//set the headers for authentication
+const headers = {
+  paymenttoken: 'sulaiman',
+};
+export const createPurchase = async (data: PurchaseRecordType[]) => {
+  const { data: response } = await axios.post('api/purchase', data, {
+    headers: headers,
+  });
+
+  return response.data;
+};
 
 const App = () => {
   const [cartOpen, setCartOpen] = useState(false);
   // Control the cheese detail dialog open state
   const [dialogOpen, setDialogOpen] = useState(false);
   //Determine the click card index
-  const [clickCardIndex, setClickCardIndex] =
-    useState<number>(2);
-  const [cartItems, setCartItems] = useState(
-    [] as CartItemType[]
-  );
-  const { data, isLoading, error } = useQuery<
-    CartItemType[]
-  >('cheeses', getCheeses);
+  const [clickCardIndex, setClickCardIndex] = useState<number>(2);
+  const [cartItems, setCartItems] = useState([] as CartItemType[]);
+  //Get cheese query
+  const { data, isLoading, error } = useQuery<CartItemType[]>('cheeses', getCheeses);
+
   console.log(data);
 
   const getTotalItems = (items: CartItemType[]) =>
-    items.reduce(
-      (ack: number, item) => ack + item.amount,
-      0
-    );
+    items.reduce((ack: number, item) => ack + item.amount, 0);
 
   const handleAddToCart = (clickedItem: CartItemType) => {
     setCartItems((prev) => {
       // 1. Is the item already added in the cart?
-      const isItemInCart = prev.find(
-        (item) => item.id === clickedItem.id
-      );
+      const isItemInCart = prev.find((item) => item.id === clickedItem.id);
 
       if (isItemInCart) {
         return prev.map((item) =>
-          item.id === clickedItem.id
-            ? { ...item, amount: item.amount + 1 }
-            : item
+          item.id === clickedItem.id ? { ...item, amount: item.amount + 1 } : item
         );
       }
       // First time the item is added
@@ -81,10 +86,7 @@ const App = () => {
       prev.reduce((ack, item) => {
         if (item.id === id) {
           if (item.amount === 1) return ack;
-          return [
-            ...ack,
-            { ...item, amount: item.amount - 1 },
-          ];
+          return [...ack, { ...item, amount: item.amount - 1 }];
         } else {
           return [...ack, item];
         }
@@ -99,17 +101,10 @@ const App = () => {
     <Wrapper>
       <StyledAppBar position="static">
         <Toolbar>
-          <Grid
-            container
-            direction="row"
-            justify="space-between"
-            alignItems="center"
-          >
+          <Grid container direction="row" justify="space-between" alignItems="center">
             <StyledButton>
               <RestoreIcon />
-              <Typography variant="subtitle2">
-                Recent Purchases
-              </Typography>
+              <Typography variant="subtitle2">Recent Purchases</Typography>
             </StyledButton>
 
             <HeaderTypography variant="h3" noWrap>
@@ -117,27 +112,17 @@ const App = () => {
             </HeaderTypography>
 
             <StyledButton onClick={() => setCartOpen(true)}>
-              <Badge
-                badgeContent={getTotalItems(cartItems)}
-                color="error"
-                data-cy="badge-count"
-              >
+              <Badge badgeContent={getTotalItems(cartItems)} color="error" data-cy="badge-count">
                 <AddShoppingCartIcon />
               </Badge>
 
-              <Typography variant="subtitle2">
-                Cart
-              </Typography>
+              <Typography variant="subtitle2">Cart</Typography>
             </StyledButton>
           </Grid>
         </Toolbar>
       </StyledAppBar>
 
-      <Drawer
-        anchor="right"
-        open={cartOpen}
-        onClose={() => setCartOpen(false)}
-      >
+      <Drawer anchor="right" open={cartOpen} onClose={() => setCartOpen(false)}>
         <Cart
           cartItems={cartItems}
           addToCart={handleAddToCart}
@@ -157,10 +142,7 @@ const App = () => {
               setClickCardIndex(item.id);
             }}
           >
-            <Item
-              item={item}
-              handleAddToCart={handleAddToCart}
-            />
+            <Item item={item} handleAddToCart={handleAddToCart} />
           </Grid>
         ))}
       </Grid>
