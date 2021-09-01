@@ -1,28 +1,31 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import Button from '@material-ui/core/Button';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { PurchaseRecordType } from '../../App';
 import { useQuery } from 'react-query';
+import ImageCard from '../../Components/ImageCard';
+import { Drawer, Typography } from '@material-ui/core';
 
 //types
 type Props = {
   open: boolean;
-  setOpen: (openStatus: boolean) => void;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const useStyles = makeStyles({
-  fullList: {
-    width: '500px',
-  },
-});
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    fullList: {
+      width: '600px',
+      marginTop: '20px',
+    },
+    large: {
+      width: '160px',
+      height: '60px',
+    },
+    title: {
+      width: '600px',
+    },
+  })
+);
 
 // Get purchase history
 const getPurchase = async (): Promise<PurchaseRecordType[]> =>
@@ -30,37 +33,28 @@ const getPurchase = async (): Promise<PurchaseRecordType[]> =>
 
 const PurchaseHistory: React.FC<Props> = ({ open, setOpen }) => {
   //Get purchase query
-  const { data, isLoading, error } = useQuery<PurchaseRecordType[]>('cheeses', getPurchase);
+  const { data, isLoading, error } = useQuery<any[]>('records', getPurchase);
   const classes = useStyles();
+
+  if (error) {
+    alert(`There is an error in getting your purchase history: ${error} `);
+  }
 
   return (
     <>
-      <SwipeableDrawer
-        anchor="left"
-        open={open}
-        onClose={() => setOpen(false)}
-        onOpen={() => setOpen(true)}
-      >
-        <div className={classes.fullList} role="presentation" onClick={() => setOpen(true)}>
-          <List>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </List>
-          <Divider />
-          <List>
-            {['All mail', 'Trash', 'Spam'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </List>
+      <Drawer anchor="left" open={open} onClose={() => setOpen(false)}>
+        <div className={classes.fullList} role="presentation">
+          {isLoading ? (
+            <Typography variant="h4">Loading ...</Typography>
+          ) : (
+            <div>
+              {data?.map((cheese: PurchaseRecordType) => (
+                <ImageCard cheeseItem={cheese} />
+              ))}
+            </div>
+          )}
         </div>
-      </SwipeableDrawer>
+      </Drawer>
     </>
   );
 };
