@@ -2,16 +2,9 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import { TransitionProps } from '@material-ui/core/transitions';
-import {
-  makeStyles,
-  createStyles,
-  Theme,
-} from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -19,14 +12,13 @@ import ButtonBase from '@material-ui/core/ButtonBase';
 
 //Glass Magnifier to see the details of the image
 import { GlassMagnifier } from 'react-image-magnifiers';
-//Styles
-import { Wrapper } from './CheeseDetailDialog.styles';
+
 //Types
 import { CartItemType } from '../../App';
 
 type Props = {
   open: boolean;
-  setOpen: (openStatus: boolean) => void;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   cheeseItem: CartItemType;
 };
 
@@ -35,6 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
+      margin: 40,
     },
     paper: {
       padding: theme.spacing(2),
@@ -64,11 +57,7 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const CheeseDetailDialog: React.FC<Props> = ({
-  open,
-  setOpen,
-  cheeseItem,
-}) => {
+const CheeseDetailDialog: React.FC<Props> = ({ open, setOpen, cheeseItem }) => {
   const handleClose = () => {
     setOpen(false);
   };
@@ -76,15 +65,15 @@ const CheeseDetailDialog: React.FC<Props> = ({
   const classes = useStyles();
 
   return (
-    <div>
-      <Wrapper className={classes.root}>
-        <Dialog
-          open={open}
-          TransitionComponent={Transition}
-          keepMounted
-          onClose={handleClose}
-          maxWidth="lg"
-        >
+    <div className={classes.root}>
+      <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        maxWidth="lg"
+      >
+        {cheeseItem && (
           <Paper className={classes.paper}>
             <Grid container spacing={2}>
               <Grid item>
@@ -97,50 +86,33 @@ const CheeseDetailDialog: React.FC<Props> = ({
                 </ButtonBase>
               </Grid>
               <Grid item xs={12} sm container>
-                <Grid
-                  item
-                  xs
-                  container
-                  direction="column"
-                  spacing={2}
-                >
+                <Grid item xs container direction="column" spacing={2}>
                   <Grid item xs>
-                    <Typography
-                      gutterBottom
-                      variant="subtitle1"
-                    >
+                    <Typography gutterBottom variant="subtitle1">
                       {cheeseItem.title}
                     </Typography>
-                    <Typography
-                      variant="body2"
-                      gutterBottom
-                    >
+                    <Typography variant="body2" gutterBottom>
                       Category: {cheeseItem.category}
                     </Typography>
-                    <Typography
-                      variant="body2"
-                      color="textSecondary"
-                    >
+                    <Typography variant="body2" color="textSecondary">
                       Description:
                       {cheeseItem.description}
                     </Typography>
                   </Grid>
                 </Grid>
                 <Grid item>
-                  <Typography variant="subtitle1">
-                    ${cheeseItem.price}
-                  </Typography>
+                  <Typography variant="subtitle1">${cheeseItem.price}</Typography>
                 </Grid>
               </Grid>
             </Grid>
           </Paper>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Close
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Wrapper>
+        )}
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
