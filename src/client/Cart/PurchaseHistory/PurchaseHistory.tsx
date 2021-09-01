@@ -4,6 +4,7 @@ import { PurchaseRecordType } from '../../App';
 import { useQuery } from 'react-query';
 import ImageCard from '../../Components/ImageCard';
 import { Drawer, Typography } from '@material-ui/core';
+import { getPurchase } from '../../Api/CheeseApi';
 
 //types
 type Props = {
@@ -26,10 +27,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-
-// Get purchase history
-const getPurchase = async (): Promise<PurchaseRecordType[]> =>
-  await (await fetch(`api/purchase`)).json();
 
 const PurchaseHistory: React.FC<Props> = ({ open, setOpen }) => {
   //Get purchase query

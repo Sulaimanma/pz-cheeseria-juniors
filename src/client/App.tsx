@@ -15,6 +15,7 @@ import { Wrapper, StyledButton, StyledAppBar, HeaderTypography } from './App.sty
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import CheeseDetailDialog from './Cart/CheeseDetailDialog/CheeseDetailDialog';
 import PurchaseHistory from './Cart/PurchaseHistory/PurchaseHistory';
+import { getCheeses } from './Api/CheeseApi';
 
 // Types
 export type CartItemType = {
@@ -35,21 +36,6 @@ export type PurchaseRecordType = {
   id: string;
   amount: number;
   purchaseTime: string;
-};
-// Get cheese list
-const getCheeses = async (): Promise<CartItemType[]> => await (await fetch(`api/cheeses`)).json();
-// create purchase record
-
-//set the headers for authentication
-const headers = {
-  paymenttoken: 'sulaiman',
-};
-export const createPurchase = async (data: PurchaseRecordType[]) => {
-  const { data: response } = await axios.post('api/purchase', data, {
-    headers: headers,
-  });
-
-  return response.data;
 };
 
 const App = () => {

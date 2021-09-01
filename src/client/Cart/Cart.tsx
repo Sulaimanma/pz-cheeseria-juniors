@@ -1,10 +1,11 @@
 import CartItem from './CartItem/CartItem';
 import { Wrapper } from './Cart.styles';
-import { CartItemType, createPurchase, PurchaseRecordType } from '../App';
+import { CartItemType, PurchaseRecordType } from '../App';
 import { Button } from '@material-ui/core';
 import { useQueryClient, useMutation } from 'react-query';
 import moment from 'moment';
 import { v4 as uuid } from 'uuid';
+import { createPurchase } from '../Api/CheeseApi';
 type Props = {
   cartItems: CartItemType[];
   addToCart: (clickedItem: CartItemType) => void;
