@@ -4,16 +4,17 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import ButtonBase from '@material-ui/core/ButtonBase';
-import { CartItemType } from '../App';
+import { CartItemType, PurchaseRecordType } from '../App';
 
 //types
 type Props = {
-  cheeseItem: CartItemType;
+  cheeseItem: PurchaseRecordType;
 };
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
+      marginBottom: 10,
     },
     paper: {
       padding: theme.spacing(2),
@@ -29,6 +30,9 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'block',
       maxWidth: '100%',
       maxHeight: '100%',
+    },
+    time: {
+      marginTop: 35,
     },
   })
 );
@@ -51,11 +55,14 @@ const ImageCard: React.FC<Props> = ({ cheeseItem }) => {
                 <Typography gutterBottom variant="subtitle1">
                   {cheeseItem.title}
                 </Typography>
-                <Typography variant="body2" gutterBottom>
-                  Category:{cheeseItem.category}
-                </Typography>
+                {/* <Typography variant="body2" gutterBottom>
+                  Category:{cheeseItem.}
+                </Typography> */}
                 <Typography variant="body2" color="textSecondary">
                   x{cheeseItem.amount}
+                </Typography>
+                <Typography variant="body2" color="textSecondary" className={classes.time}>
+                  Purchased time: {cheeseItem.purchaseTime}
                 </Typography>
               </Grid>
             </Grid>
