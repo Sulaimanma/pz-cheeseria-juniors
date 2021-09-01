@@ -9,20 +9,31 @@ type Props = {
   cartItems: CartItemType[];
   addToCart: (clickedItem: CartItemType) => void;
   removeFromCart: (id: number) => void;
+  setCartOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setCartItems: React.Dispatch<React.SetStateAction<CartItemType[]>>;
 };
 
-const Cart: React.FC<Props> = ({ cartItems, addToCart, removeFromCart }) => {
+const Cart: React.FC<Props> = ({
+  cartItems,
+  addToCart,
+  removeFromCart,
+  setCartOpen,
+  setCartItems,
+}) => {
   const queryClient = useQueryClient();
 
   //Post purchase record query
-  const { mutate, isLoading, error } = useMutation(createPurchase, {
+  const { mutate, error } = useMutation(createPurchase, {
     onSuccess: (data) => {
       console.log(data);
-      const message = 'success';
+      const message = 'You purchase these cheese successfully';
+      setCartItems([]);
       alert(message);
+
+      setCartOpen(false);
     },
     onError: () => {
-      alert('there was an error');
+      alert(`You met the error in the purchase: ${error}`);
     },
     onSettled: () => {
       queryClient.invalidateQueries('create');

@@ -14,6 +14,7 @@ import axios from 'axios';
 import { Wrapper, StyledButton, StyledAppBar, HeaderTypography } from './App.styles';
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import CheeseDetailDialog from './Cart/CheeseDetailDialog/CheeseDetailDialog';
+import PurchaseHistory from './Cart/PurchaseHistory/PurchaseHistory';
 
 // Types
 export type CartItemType = {
@@ -53,6 +54,8 @@ export const createPurchase = async (data: PurchaseRecordType[]) => {
 
 const App = () => {
   const [cartOpen, setCartOpen] = useState(false);
+  // Control the purchase history open state
+  const [purchaseOpen, setPurchaseOpen] = useState(false);
   // Control the cheese detail dialog open state
   const [dialogOpen, setDialogOpen] = useState(false);
   //Determine the click card index
@@ -102,7 +105,7 @@ const App = () => {
       <StyledAppBar position="static">
         <Toolbar>
           <Grid container direction="row" justify="space-between" alignItems="center">
-            <StyledButton>
+            <StyledButton onClick={() => setPurchaseOpen(true)}>
               <RestoreIcon />
               <Typography variant="subtitle2">Recent Purchases</Typography>
             </StyledButton>
@@ -127,6 +130,8 @@ const App = () => {
           cartItems={cartItems}
           addToCart={handleAddToCart}
           removeFromCart={handleRemoveFromCart}
+          setCartOpen={setCartOpen}
+          setCartItems={setCartItems}
         />
       </Drawer>
 
@@ -146,13 +151,15 @@ const App = () => {
           </Grid>
         ))}
       </Grid>
-      {data && (
+
+      {dialogOpen && data && (
         <CheeseDetailDialog
           open={dialogOpen}
           setOpen={setDialogOpen}
           cheeseItem={data[clickCardIndex - 1]}
         />
       )}
+      {purchaseOpen && <PurchaseHistory open={purchaseOpen} setOpen={setPurchaseOpen} />}
     </Wrapper>
   );
 };
