@@ -3,6 +3,8 @@ import apiRouter from './routes';
 
 const app = express();
 
+//Add middleware to parse json
+app.use(express.json());
 app.use(express.static('public'));
 app.use(apiRouter);
 
