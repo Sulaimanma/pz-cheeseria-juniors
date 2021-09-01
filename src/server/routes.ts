@@ -17,7 +17,6 @@ router.post('/api/purchase', (req, res, next) => {
 
   if (paymenttoken && paymenttoken === 'sulaiman') {
     const purchaseRecord: any[] = req.body;
-    console.log('newRecord', purchaseRecord);
 
     //Update the purchase list
     purchaseRecord?.map((record) => purchaseList.push(record));
