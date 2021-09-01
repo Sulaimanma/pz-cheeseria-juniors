@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useQuery } from 'react-query';
+import React, { useEffect, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 // Components
 import Item from './Cart/Item/Item';
 import Cart from './Cart/Cart';
@@ -16,6 +16,7 @@ import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import CheeseDetailDialog from './Cart/CheeseDetailDialog/CheeseDetailDialog';
 import PurchaseHistory from './Cart/PurchaseHistory/PurchaseHistory';
 import { getCheeses } from './Api/CheeseApi';
+import useLocalStorage from './Hooks/useLocalStorage';
 
 // Types
 export type CartItemType = {
@@ -46,17 +47,16 @@ const App = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   //Determine the click card index
   const [clickCardIndex, setClickCardIndex] = useState<number>(2);
-  const [cartItems, setCartItems] = useState([] as CartItemType[]);
+  // Using local storage hook to prevent cart items data missing after refreshing page
+  const [cartItems, setCartItems] = useLocalStorage('cartItems', [] as CartItemType[]);
   //Get cheese query
   const { data, isLoading, error } = useQuery<CartItemType[]>('cheeses', getCheeses);
-
-  console.log(data);
 
   const getTotalItems = (items: CartItemType[]) =>
     items.reduce((ack: number, item) => ack + item.amount, 0);
 
-  const handleAddToCart = (clickedItem: CartItemType) => {
-    setCartItems((prev) => {
+  const handleAddToCart = async (clickedItem: CartItemType) => {
+    await setCartItems((prev) => {
       // 1. Is the item already added in the cart?
       const isItemInCart = prev.find((item) => item.id === clickedItem.id);
 
@@ -70,8 +70,8 @@ const App = () => {
     });
   };
 
-  const handleRemoveFromCart = (id: number) => {
-    setCartItems((prev) =>
+  const handleRemoveFromCart = async (id: number) => {
+    await setCartItems((prev) =>
       prev.reduce((ack, item) => {
         if (item.id === id) {
           if (item.amount === 1) return ack;
@@ -82,6 +82,7 @@ const App = () => {
       }, [] as CartItemType[])
     );
   };
+  console.log('cart', cartItems);
 
   if (isLoading) return <LinearProgress />;
   if (error) return <div>Something went wrong ...</div>;
@@ -100,7 +101,7 @@ const App = () => {
               Welcome to Patient Zero's Cheeseria
             </HeaderTypography>
 
-            <StyledButton onClick={() => setCartOpen(true)}>
+            <StyledButton data-cy={`open-the-cart`} onClick={() => setCartOpen(true)}>
               <Badge badgeContent={getTotalItems(cartItems)} color="error" data-cy="badge-count">
                 <AddShoppingCartIcon />
               </Badge>

@@ -9,16 +9,12 @@ type Props = {
   handleAddToCart: (clickedItem: CartItemType) => void;
 };
 
-const Item: React.FC<Props> = ({
-  item,
-  handleAddToCart,
-}) => {
+const Item: React.FC<Props> = ({ item, handleAddToCart }) => {
   //Prevent div click cover the button click
-  const handleButtonClick: React.MouseEventHandler<HTMLButtonElement> =
-    (event) => {
-      handleAddToCart(item);
-      event.stopPropagation();
-    };
+  const handleButtonClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
+    handleAddToCart(item);
+    event.stopPropagation();
+  };
   return (
     <Wrapper>
       <img src={item.image} alt={item.title} />
@@ -26,10 +22,7 @@ const Item: React.FC<Props> = ({
         <h3>{item.title}</h3>
         <h3>${item.price}</h3>
       </div>
-      <Button
-        onClick={handleButtonClick}
-        data-cy={`add-to-cart-${item.id}`}
-      >
+      <Button onClick={handleButtonClick} data-cy={`add-to-cart-${item.id}`}>
         Add to cart
       </Button>
     </Wrapper>

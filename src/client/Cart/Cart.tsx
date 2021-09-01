@@ -71,12 +71,18 @@ const Cart: React.FC<Props> = ({
       <h2>Your Shopping Cart</h2>
       {cartItems.length === 0 ? <p>No items in cart.</p> : null}
       {cartItems.map((item) => (
-        <CartItem key={item.id} item={item} addToCart={addToCart} removeFromCart={removeFromCart} />
+        <CartItem
+          key={item.id}
+          item={item}
+          addToCart={addToCart}
+          removeFromCart={removeFromCart}
+          data-cy={`cart-item-${item.id}`}
+        />
       ))}
       <h2>Total: ${calculateTotal(cartItems).toFixed(2)}</h2>
       {cartItems.length !== 0 ? (
         <Button
-          data-cy={`purchase-cheese`}
+          data-cy="purchase-cheese"
           variant="contained"
           onClick={() => purchaseItems(cartItems)}
         >
