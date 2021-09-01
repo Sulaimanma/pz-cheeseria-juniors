@@ -28,9 +28,10 @@ const Cart: React.FC<Props> = ({
     onSuccess: (data) => {
       console.log(data);
       const message = 'You purchase these cheese successfully';
+      //clear the cart item list
       setCartItems([]);
       alert(message);
-
+      //close cart window
       setCartOpen(false);
     },
     onError: () => {
@@ -73,9 +74,15 @@ const Cart: React.FC<Props> = ({
         <CartItem key={item.id} item={item} addToCart={addToCart} removeFromCart={removeFromCart} />
       ))}
       <h2>Total: ${calculateTotal(cartItems).toFixed(2)}</h2>
-      <Button variant="contained" onClick={() => purchaseItems(cartItems)}>
-        Purchase
-      </Button>
+      {cartItems.length !== 0 ? (
+        <Button
+          data-cy={`purchase-cheese`}
+          variant="contained"
+          onClick={() => purchaseItems(cartItems)}
+        >
+          Purchase
+        </Button>
+      ) : null}
     </Wrapper>
   );
 };
