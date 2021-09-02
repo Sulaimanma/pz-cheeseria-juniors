@@ -1,8 +1,18 @@
 import express = require('express');
 import apiRouter from './routes';
+import mongoose = require('mongoose');
 
 const app = express();
 
+//Connect to mogonDB datatbase
+mongoose
+  .connect(
+    'mongodb+srv://sulaiman:Lgp2755487@pz-cheese.cp3h9.mongodb.net/pz-cheese?retryWrites=true&w=majority'
+  )
+  .then((result) => {
+    console.log('connect result', result);
+  })
+  .catch((err) => console.log('connection error', err));
 //Add middleware to parse json
 app.use(express.json());
 app.use(express.static('public'));
