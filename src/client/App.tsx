@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import React, { useState } from 'react';
+import { useQuery } from 'react-query';
 // Components
 import Item from './Cart/Item/Item';
 import Cart from './Cart/Cart';
@@ -12,7 +12,7 @@ import Badge from '@material-ui/core/Badge';
 import axios from 'axios';
 // Styles
 import { Wrapper, StyledButton, StyledAppBar, HeaderTypography } from './App.styles';
-import { AppBar, Toolbar, Typography } from '@material-ui/core';
+import { Toolbar, Typography } from '@material-ui/core';
 import CheeseDetailDialog from './Cart/CheeseDetailDialog/CheeseDetailDialog';
 import PurchaseHistory from './Cart/PurchaseHistory/PurchaseHistory';
 import { getCheeses } from './Api/CheeseApi';
@@ -82,9 +82,9 @@ const App = () => {
       }, [] as CartItemType[])
     );
   };
-  console.log('cart', cartItems);
 
   if (isLoading) return <LinearProgress />;
+
   if (error) return <div>Something went wrong ...</div>;
 
   return (
