@@ -1,6 +1,7 @@
 import express = require('express');
 import apiRouter from './routes';
 import mongoose = require('mongoose');
+import Purchase from './data/models/purchase';
 
 const app = express();
 
@@ -11,8 +12,17 @@ mongoose
   )
   .then((result) => {
     console.log('connect result', result);
+    //Clean database
+    // Purchase.deleteMany()
+    //   .then(function () {
+    //     console.log('Data deleted'); // Success
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error); // Failure
+    //   });
   })
   .catch((err) => console.log('connection error', err));
+
 //Add middleware to parse json
 app.use(express.json());
 app.use(express.static('public'));
