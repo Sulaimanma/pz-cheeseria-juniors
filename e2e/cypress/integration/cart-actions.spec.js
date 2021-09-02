@@ -28,20 +28,32 @@ context('Cart Actions', () => {
     cy.get('[data-cy=cart-item-3]').should('exist');
   });
 
+  //Generate a random string for testing purpose
+  const uuid = () => Cypress._.random(0, 1e6);
+  const id = uuid();
+  const Randomid = `testCheeseID-${id}`;
+  const RandomTitle = `testCheeseTitle-${id}`;
+  // prettier-ignore
   it('Test whether post and get request works well', () => {
     cy.get('[data-cy=open-the-cart]').click();
     const url = 'http://localhost:3000/api/purchase';
+ 
     //Post test data
     cy.request({
       method: 'POST',
-      url: url,
+      url: '/api/purchase',
       headers: {
         paymenttoken: 'sulaiman',
       },
       body: [
         {
-          title: 'cheese',
-          id: 'cheese123',
+          "id":Randomid,
+          "amount": 3,
+          "description": 'cheese description',
+          "image": 'https://www.cheese.com/media/img/cheese/Mont_des_Cats_kaas.jpg',
+          "price": '5',
+          "purchaseTime": 'time',
+          "title": RandomTitle,
         },
       ],
     });
@@ -50,8 +62,9 @@ context('Cart Actions', () => {
       method: 'get',
       url: '/api/purchase',
     }).then((response) => {
-      expect(response.body[0].title).to.equal('cheese');
-      expect(response.body[0].id).to.equal('cheese123');
+      //Test whether the test data has been updated in the data correctly
+      expect(response.body.find((item)=>(item.id===Randomid)).title).to.equal(RandomTitle);
+     
     });
   });
 
@@ -63,8 +76,11 @@ context('Cart Actions', () => {
       method: 'get',
       url: '/api/purchase',
     }).then((response) => {
-      expect(response.body[0].title).to.equal('cheese');
-      expect(response.body[0].id).to.equal('cheese123');
+      //test whether purchase button can post the data to the database
+      expect(response.body.find((item) => item.title === 'ABBAYE DU MONT DES CATS').price).to.equal(
+        '29.21'
+      );
+      expect(response.body.find((item) => item.title === 'ADELOST').price).to.equal('367.55');
     });
   });
 });
