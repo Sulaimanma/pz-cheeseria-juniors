@@ -1,7 +1,7 @@
 import * as express from 'express';
 const cheeses = require('./data/cheeses.json');
 import mongoose = require('mongoose');
-import Purchase from './data/models/purchase';
+import {Purchase,CartItem} from './data/models/purchase';
 
 //Purchase list json
 
@@ -64,4 +64,44 @@ router.get('/api/purchase', (req, res, next) => {
     .catch((err: string) => console.log(err));
 });
 
+router.post(`/api/cart`, (req, res, next) => {  
+  const cartItemRecord: any[] = req.body;
+
+  //Loop each record to be posted to the database
+  cartItemRecord?.map(async (record) => {
+    //Read the request data into schema to validate
+    const cartItem = new CartItem({
+      id: record.id,
+      amount: record.amount,
+      description: record.description,
+      image: record.image,
+      price: record.price,
+      purchaseTime: record.purchaseTime,
+      title: record.title,
+    });
+    return (
+      cartItem
+        //Upload the data to database
+        .save()
+        .then((result) => {
+          console.log('post', result);
+          return res.status(201).send('CartItem record has been created!');
+        })
+        .catch((err: string) => console.log(err))
+    );
+  });
+  console.log('req.body', req.body);
+
+};
+
+// access cart history
+router.get('/api/cart', (req, res, next) => {
+  // Get data from database
+  CartItem.find()
+    .then((list) => {
+      console.log(list);
+      res.status(200).json(list);
+    })
+    .catch((err: string) => console.log(err));
+});
 export default router;
