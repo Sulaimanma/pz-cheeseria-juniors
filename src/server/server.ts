@@ -8,7 +8,8 @@ const app = express();
 //Connect to mogonDB datatbase
 mongoose
   .connect(
-    'mongodb+srv://sulaiman:Lgp2755487@pz-cheese.cp3h9.mongodb.net/pz-cheese?retryWrites=true&w=majority'
+    // 'mongodb+srv://sulaiman:Lgp2755487@pz-cheese.cp3h9.mongodb.net/pz-cheese?retryWrites=true&w=majority'
+    `mongodb+srv://sulaiman:Lgp2755487@pz-cheese.cp3h9.mongodb.net/pz-cheese?retryWrites=true&w=majority`
   )
   .then((result) => {
     console.log('connect result', result);
