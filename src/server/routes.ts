@@ -1,8 +1,8 @@
 import * as express from 'express';
 const cheeses = require('./data/cheeses.json');
 import mongoose = require('mongoose');
-import {Purchase,CartItem} from './data/models/purchase';
-
+import Purchase from './data/models/purchase';
+import CartItem from './data/models/cartItem';
 //Purchase list json
 
 // const purchaseList: any[] = [];
@@ -72,6 +72,7 @@ router.post(`/api/cart`, (req, res, next) => {
     //Read the request data into schema to validate
     const cartItem = new CartItem({
       id: record.id,
+      category: record.category,
       amount: record.amount,
       description: record.description,
       image: record.image,
@@ -92,7 +93,7 @@ router.post(`/api/cart`, (req, res, next) => {
   });
   console.log('req.body', req.body);
 
-};
+});
 
 // access cart history
 router.get('/api/cart', (req, res, next) => {
@@ -103,5 +104,33 @@ router.get('/api/cart', (req, res, next) => {
       res.status(200).json(list);
     })
     .catch((err: string) => console.log(err));
+});
+
+router.patch(`/api/cart/`, (req, res, next) => {
+  const cartItemRecord: any[] = req.body;
+  //Loop each record to be posted to the database
+  cartItemRecord?.map(async (record) => {
+    //Read the request data into schema to validate
+    const cartItem = new CartItem({
+      id: record.id,
+      category: record.category,
+      amount: record.amount,
+      description: record.description,
+      image: record.image,
+      price: record.price,
+      purchaseTime: record.purchaseTime,
+      title: record.title,
+    });
+    return (
+      CartItem
+        .findByIdAndUpdate(cartItem.id, { amount: cartItem.amount })
+        .then((result) => {
+          console.log('patch', result);
+          return res.status(201).send('CartItem record has been updated!');
+        })
+        .catch((err: string) => console.log(err))
+    );
+    
+  });
 });
 export default router;

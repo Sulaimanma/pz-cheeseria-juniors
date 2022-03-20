@@ -21,4 +21,16 @@ export const createPurchase = async (data: PurchaseRecordType[]) => {
 
 // Get purchase records
 export const getPurchase = async (): Promise<PurchaseRecordType[]> =>
-  await (await fetch(`api/purchase`)).json();
+  (await fetch(`api/purchase`)).json();
+
+export const createCartItem = async (data: CartItemType) => {
+  const { data: response } = await axios.post('api/cart', data, {
+    headers: headers,
+  });
+
+  return response.data;
+};
+
+export const getCartItem = async (): Promise<CartItemType[]> => {
+  return (await fetch(`api/cart`)).json();
+}

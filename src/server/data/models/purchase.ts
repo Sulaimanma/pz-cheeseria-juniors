@@ -24,23 +24,3 @@ const PurchaseSchema: Schema = new Schema({
 
 export default model<PurchaseRecordType>('Purchase', PurchaseSchema);
 
-// Create the CartItemType
-export interface CartItemType {
-  id: string;
-  amount: number;
-  description: string;
-  image: string;
-  price: string;
-  title: string;
-}
-
-const CartItemSchema: Schema = new Schema({
-  id: { type: String, required: true, unique: true },
-  amount: { type: String, required: true, unique: false },
-  description: { type: String, unique: false },
-  image: { type: String, unique: false },
-  price: { type: String, required: true, unique: false },
-  title: { type: String, required: true, unique: false },
-});
-
-export default model<CartItemType>('CartItem', CartItemSchema);
