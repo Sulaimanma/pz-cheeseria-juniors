@@ -31,6 +31,20 @@ export const createCartItem = async (data: CartItemType) => {
   return response.data;
 };
 
+export const patchCartItem = async (data: CartItemType) => {
+  const { data: response } = await axios.patch(`api/cart/${data.id}`, data, {
+    headers: headers,
+  });
+  return response.data;
+};
+
 export const getCartItem = async (): Promise<CartItemType[]> => {
   return (await fetch(`api/cart`)).json();
 }
+
+export const deleteCartItem = async (id: number) => {
+  await axios.delete(`api/cart/${id}`, {
+    headers: headers,
+  });
+};
+

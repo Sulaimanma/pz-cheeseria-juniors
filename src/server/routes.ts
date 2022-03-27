@@ -133,4 +133,32 @@ router.patch(`/api/cart/`, (req, res, next) => {
     
   });
 });
+
+router.delete(`/api/cart/`, (req, res, next) => {
+  const cartItemRecord: any[] = req.body;
+  //Loop each record to be posted to the database
+  cartItemRecord?.map(async (record) => {
+    //Read the request data into schema to validate
+    const cartItem = new CartItem({
+      id: record.id,
+      category: record.category,
+      amount: record.amount,
+      description: record.description,
+      image: record.image,
+      price: record.price,
+      purchaseTime: record.purchaseTime,
+      title: record.title,
+    });
+    return (
+      CartItem
+        .findByIdAndDelete(cartItem.id)
+        .then((result) => {
+          console.log('delete', result);
+          return res.status(201).send('CartItem record has been deleted!');
+        })
+        .catch((err: string) => console.log(err))
+    );
+  });
+});
+
 export default router;
