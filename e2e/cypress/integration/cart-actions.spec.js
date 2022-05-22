@@ -36,7 +36,7 @@ context('Cart Actions', () => {
   // prettier-ignore
   it('Test whether post and get request works well', () => {
     cy.get('[data-cy=open-the-cart]').click();
-    const url = 'http://localhost:3000/api/purchase';
+    const url = 'http://localhost:5700/api/purchase';
  
     //Post test data
     cy.request({

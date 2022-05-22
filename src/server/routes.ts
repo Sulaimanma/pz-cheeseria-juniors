@@ -1,6 +1,5 @@
 import * as express from 'express';
 const cheeses = require('./data/cheeses.json');
-import mongoose = require('mongoose');
 import Purchase from './data/models/purchase';
 import CartItem from './data/models/cartItem';
 //Purchase list json
@@ -8,7 +7,7 @@ import CartItem from './data/models/cartItem';
 // const purchaseList: any[] = [];
 
 const router = express.Router();
-
+module.exports = router;
 // const Purchase = require('./data/models/purchase');
 
 router.get('/api/cheeses', (req, res, next) => {
