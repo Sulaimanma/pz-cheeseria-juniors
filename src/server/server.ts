@@ -1,7 +1,6 @@
 import express = require("express");
 import apiRouter from "./routes";
 import mongoose = require("mongoose");
-import Purchase from "./data/models/purchase";
 
 const app = express();
 
